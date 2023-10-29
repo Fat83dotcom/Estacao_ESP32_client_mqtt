@@ -1,1 +1,6 @@
+daemonize==2.5.0
+mypy==1.6.1
+mypy-extensions==1.0.0
 paho-mqtt==1.6.1
+tomli==2.0.1
+typing_extensions==4.8.0
