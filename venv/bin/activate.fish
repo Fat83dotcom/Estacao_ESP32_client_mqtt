@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/fernando/Área de Trabalho/Estacao_ESP32_broker_mqtt/venv"
+set -gx VIRTUAL_ENV "/home/fernando/Área de Trabalho/Estacao_ESP32_client_mqtt/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
