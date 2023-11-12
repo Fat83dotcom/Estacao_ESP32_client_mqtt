@@ -174,7 +174,23 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
         schema: str, collumns: tuple, conditionLiteral: str
     ) -> tuple:
         try:
-            if conditionLiteral == '':
+            if conditionLiteral == '' and condiction == '':
+                if '*' in collumns:
+                    query = sql.SQL(
+                        """SELECT * FROM {tab}"""
+                    ).format(
+                        tab=sql.Identifier(schema, table),
+                    ), ()
+                    return query
+                else:
+                    query = sql.SQL(
+                        """SELECT {col} FROM {tab}"""
+                    ).format(
+                        col=sql.SQL(', ').join(map(sql.Identifier, collumns)),
+                        tab=sql.Identifier(schema, table),
+                    ), ()
+                    return query
+            elif conditionLiteral == '':
                 if '*' in collumns:
                     query = sql.SQL(
                         """SELECT * FROM {tab}
