@@ -1,19 +1,19 @@
 CREATE TABLE localization (
-	ID_loc int NOT NULL PRIMARY KEY,
+	ID_loc serial NOT NULL PRIMARY KEY,
 	city varchar(100),
 	neighborhood varchar(100),
 	coordinates varchar(100)NULL
 );
 
 CREATE TABLE sensor (
-	ID_sen int NOT NULL PRIMARY KEY,
+	ID_sen serial NOT NULL PRIMARY KEY,
 	ID_localization int NULL,
 	mac varchar(20) NOT NULL UNIQUE,
 	FOREIGN KEY (ID_localization) REFERENCES localization (ID_loc)
 );
 
 CREATE TABLE data_sensor (
-	ID_data bigint NOT NULL PRIMARY KEY,
+	ID_data serial NOT NULL PRIMARY KEY,
 	ID_sensor int NOT NULL,
 	date_hour timestamp,
 	temperature double precision,
@@ -23,7 +23,7 @@ CREATE TABLE data_sensor (
 );
 
 CREATE TABLE daily_data_analysis (
-	ID_d_d_analysis int NOT NULL PRIMARY KEY,
+	ID_d_d_analysis serial NOT NULL PRIMARY KEY,
 	ID_sensor int NOT NULL,
 	temperature_mean double precision,
 	temperature_maximun double precision,
