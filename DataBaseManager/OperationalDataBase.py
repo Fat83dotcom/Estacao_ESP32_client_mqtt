@@ -366,22 +366,23 @@ class Sensors(DataModel):
                 collumns=collumns
             )
             return result
-        except Exception:
-            ...
+        except Exception as e:
+            print(e)
 
     def execInsertTable(
         self, *args, table: str, collumn: tuple, schema='public'
-    ) -> None:
+    ) -> bool:
         try:
             data = (
-                args[0]['mac'],
-                args[0]['ID_localization']
+                args[0],
             )
             self.DBInstance.insertTable(
-                table=table, collumn=collumn, args=data
+                data, table=table, collumn=collumn
             )
-        except Exception:
-            ...
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
 
 if __name__ == '__main__':
