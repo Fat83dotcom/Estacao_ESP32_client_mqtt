@@ -1,6 +1,8 @@
-import paho.mqtt.client as mqtt
-from DataBaseManager.OperationalDataBase import Sensors
 import json
+import paho.mqtt.client as mqtt
+from time import strftime, localtime
+from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
+from DataBaseManager.settings import banco
 
 
 class VerifySensors:
