@@ -1,9 +1,7 @@
 import psycopg
 from abc import ABC, abstractmethod
 from psycopg import sql, Error
-# from datetime import datetime
-from settings import banco
-from LogFiles import LogErrorsMixin
+from DataBaseManager.LogFiles import LogErrorsMixin
 
 
 class DataBase(ABC):
