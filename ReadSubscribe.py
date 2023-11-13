@@ -7,8 +7,7 @@ from DataBaseManager.settings import banco
 
 
 class VerifySensors:
-    def __init__(self) -> None:
-        dbPostgreSQL = DataBasePostgreSQL(banco)
+    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
         self.sensorsInstace = Sensors(dbPostgreSQL)
         self.__sensorsOnDataBase: list[tuple] = [
             sens for sens in self.__searchSensors()
