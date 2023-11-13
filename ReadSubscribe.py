@@ -65,7 +65,9 @@ class VerifySensors:
 
 topic_sub = "ESP32_Sensors_BME280"
 
-sens = VerifySensors()
+dbPostgreSQL = DataBasePostgreSQL(banco)
+sens = VerifySensors(dbPostgreSQL)
+sensData = DataSensors(dbPostgreSQL)
 
 receiveDataOnSensors: dict = {}
 
