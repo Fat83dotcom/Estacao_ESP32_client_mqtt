@@ -75,13 +75,33 @@ receiveDataOnSensors: dict = {}
 def on_message(client, userdata, msg):
     msgDecode = str(msg.payload.decode('utf-8', 'ignore'))
     receiveDataOnSensors: dict = json.loads(msgDecode)
-    receiveDataOnSensors['dataHora'] = strftime(
-        '%d/%m/%Y %H:%M:%S', localtime(int(receiveDataOnSensors['dataHora']))
-    )
+
+    if receiveDataOnSensors['dataHora'] != 'No date':
+        receiveDataOnSensors['dataHora'] = strftime(
+            '%d/%m/%Y %H:%M:%S', localtime(int(
+                receiveDataOnSensors['dataHora']
+            ))
+        )
+    else:
+        receiveDataOnSensors['dataHora'] = strftime(
+            '%d/%m/%Y %H:%M:%S', localtime(time())
+        )
     if receiveDataOnSensors['IDMac'] not in sens.getSensorMac():
         sens.sensors = receiveDataOnSensors['IDMac']
-    else:
-        print('já tem!')
+    if sens.sensors:
+        idSensor = sens.getIdSensor(receiveDataOnSensors['IDMac'])
+        if idSensor != -1:
+            receiveDataOnSensors['id_sensor'] = idSensor
+            sensData.execInsertTable(
+                receiveDataOnSensors,
+                table='data_sensor',
+                collumn=(
+                    'id_sensor', 'date_hour', 'temperature',
+                    'humidity', 'pressure'
+                )
+            )
+
+    print(sens.getIdSensor(receiveDataOnSensors['IDMac']))
     print(sens.sensors)
     print(receiveDataOnSensors)
 
