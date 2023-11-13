@@ -56,6 +56,12 @@ class VerifySensors:
         else:
             return []
 
+    def getIdSensor(self, sensor) -> int:
+        for i in self.__sensorsOnDataBase:
+            if sensor == i[2]:
+                return int(i[0])
+        return -1
+
 
 topic_sub = "ESP32_Sensors_BME280"
 
