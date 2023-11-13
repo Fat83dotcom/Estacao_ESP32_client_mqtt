@@ -385,6 +385,27 @@ class Sensors(DataModel):
             return False
 
 
+class DataSensors(DataModel):
+    def __init__(self, dB: DataBasePostgreSQL) -> None:
+        super().__init__(dB)
+
+    def execInsertTable(
+        self, *args, table: str, collumn: tuple, schema='public'
+    ) -> None:
+        data = (
+            args[0]['id_sensor'],
+            args[0]['dataHora'],
+            args[0]['Temperatura'],
+            args[0]['Umidade'],
+            args[0]['Pressao']
+        )
+        self.DBInstance.insertTable(
+            data,
+            table=table,
+            collumn=collumn
+        )
+
+
 if __name__ == '__main__':
 
-    d = DataBasePostgreSQL(banco)
+    pass
