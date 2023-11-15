@@ -72,6 +72,8 @@ dbPostgreSQL = DataBasePostgreSQL(banco)
 sens = VerifySensors(dbPostgreSQL)
 sensData = DataSensors(dbPostgreSQL)
 
+erros = LogErrorsMixin()
+
 receiveDataOnSensors: dict = {}
 
 
