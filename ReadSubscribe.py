@@ -1,9 +1,10 @@
 import json
 import paho.mqtt.client as mqtt
+from daemonize import Daemonize
 from time import strftime, localtime, time
 from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
-from DataBaseManager.OperationalDataBase import DataSensors
-from DataBaseManager.settings import banco
+from DataBaseManager.OperationalDataBase import DataSensors, LogErrorsMixin
+from DataBaseManager.settings_db import banco
 
 
 class VerifySensors:
