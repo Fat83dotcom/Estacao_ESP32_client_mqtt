@@ -64,6 +64,8 @@ class VerifySensors:
         return -1
 
 
+pid = '/tmp/ReadSubscribe.pid'
+
 topic_sub = "ESP32_Sensors_BME280"
 
 dbPostgreSQL = DataBasePostgreSQL(banco)
@@ -103,18 +105,24 @@ def on_message(client, userdata, msg):
                     )
                 )
 
-        print(sens.getIdSensor(receiveDataOnSensors['IDMac']))
-        print(sens.sensors)
-        print(receiveDataOnSensors)
     except Exception as e:
-        print(e)
+        className = erros.__class__.__name__
+        methName = erros.on_message.__name__
+        erros.registerErrors(className, methName, e)
 
 
-mqttBroker = 'broker.hivemq.com'
-port = 1883
-client = mqtt.Client('Python_Fernando')
-client.connect(mqttBroker, port)
-while 1:
-    client.subscribe(topic_sub)
-    client.on_message = on_message
-    client.loop_forever()
+def main():
+    mqttBroker = 'broker.hivemq.com'
+    port = 1883
+
+    client = mqtt.Client('Python_Fernando', protocol=5)
+    client.connect(mqttBroker, port)
+    client.tls_set()
+    while 1:
+        client.subscribe(topic_sub)
+        client.on_message = on_message
+        client.loop_forever()
+
+
+daemon = Daemonize(app='ReadSubscribe', pid=pid, action=main)
+daemon.start()
