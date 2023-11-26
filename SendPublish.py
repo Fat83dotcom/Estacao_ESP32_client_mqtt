@@ -12,7 +12,7 @@ def main():
 
     mqttBroker = 'broker.hivemq.com'
     port = 1883
-    client = mqtt.Client('Python')
+    client = mqtt.Client()
     client.connect(mqttBroker, port)
     while 1:
         status = client.publish(topic_pub, msg)
