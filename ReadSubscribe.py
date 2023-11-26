@@ -81,7 +81,6 @@ def on_message(client, userdata, msg):
     try:
         msgDecode = str(msg.payload.decode('utf-8', 'ignore'))
         receiveDataOnSensors: dict = json.loads(msgDecode)
-
         if receiveDataOnSensors['dataHora'] != 'No date':
             receiveDataOnSensors['dataHora'] = strftime(
                 '%d/%m/%Y %H:%M:%S', localtime(int(
@@ -117,9 +116,9 @@ def main():
     mqttBroker = 'broker.hivemq.com'
     port = 1883
 
-    client = mqtt.Client('Python_Fernando', protocol=5)
+    client = mqtt.Client()
     client.connect(mqttBroker, port)
-    client.tls_set()
+    # client.tls_set()
     while 1:
         client.subscribe(topic_sub)
         client.on_message = on_message
