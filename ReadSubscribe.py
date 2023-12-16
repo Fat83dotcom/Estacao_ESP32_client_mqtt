@@ -113,16 +113,21 @@ def onMessage(client, userdata, msg):
 
 
 def main():
-    mqttBroker = 'broker.hivemq.com'
-    port = 1883
+    try:
+        mqttBroker = 'broker.hivemq.com'
+        port = 1883
 
-    client = mqtt.Client()
-    client.connect(mqttBroker, port)
-    # client.tls_set()
-    while 1:
-        client.subscribe(topic_sub)
-        client.onMessage = onMessage
-        client.loop_forever()
+        client = mqtt.Client()
+        client.connect(mqttBroker, port)
+        # client.tls_set()
+        while 1:
+            client.subscribe(topic_sub)
+            client.onMessage = onMessage
+            client.loop_forever()
+    except Exception as e:
+        className = 'main'
+        methName = 'main'
+        erros.registerErrors(className, methName, e)
 
 
 daemon = Daemonize(app='ReadSubscribe', pid=pid, action=main)
