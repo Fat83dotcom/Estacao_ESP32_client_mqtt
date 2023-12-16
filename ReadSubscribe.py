@@ -77,7 +77,7 @@ erros = LogErrorsMixin()
 receiveDataOnSensors: dict = {}
 
 
-def on_message(client, userdata, msg):
+def onMessage(client, userdata, msg):
     try:
         msgDecode = str(msg.payload.decode('utf-8', 'ignore'))
         receiveDataOnSensors: dict = json.loads(msgDecode)
@@ -107,8 +107,8 @@ def on_message(client, userdata, msg):
                 )
 
     except Exception as e:
-        className = erros.__class__.__name__
-        methName = erros.on_message.__name__
+        className = 'onMessage'
+        methName = 'onMessage'
         erros.registerErrors(className, methName, e)
 
 
@@ -121,7 +121,7 @@ def main():
     # client.tls_set()
     while 1:
         client.subscribe(topic_sub)
-        client.on_message = on_message
+        client.onMessage = onMessage
         client.loop_forever()
 
 
