@@ -62,6 +62,59 @@ class VerifySensors:
         return -1
 
 
+class DateHandler:
+    def __init__(self) -> None:
+        self.__data: int = -1
+
+    @property
+    def data(self):
+        return self.__data
+
+    @data.setter
+    def data(self, value):
+        if isinstance(value, int):
+            self.__data = value
+
+    def translateDate(self) -> str:
+        if self.data != -1:
+            localData = strftime(
+                '%d/%m/%Y %H:%M:%S', localtime(int(
+                    self.data
+                ))
+            )
+            return localData
+        else:
+            localData = strftime(
+                '%d/%m/%Y %H:%M:%S', localtime(time())
+            )
+            return localData
+
+
+class SensorHandler:
+    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
+        self.sens = VerifySensors(dbPostgreSQL)
+        self.__data: str
+
+    @property
+    def data(self):
+        return self.__data
+
+    @data.setter
+    def data(self, value):
+        if isinstance(value, str):
+            self.__data = value
+
+    def checkingSensors(self):
+        if self.data not in self.sens.getSensorMac():
+            self.sens.sensors = self.data
+
+    def getIDSensor(self) -> int:
+        if self.sens.sensors:
+            idSensor = self.sens.getIdSensor(self.data)
+            return int(idSensor)
+        return -1
+
+
 class MQTTClient(LogErrorsMixin):
     def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
         self.port = 1883
