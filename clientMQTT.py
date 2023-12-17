@@ -131,30 +131,25 @@ class MQTTClient(LogErrorsMixin):
         try:
             msgDecode = str(msg.payload.decode('utf-8', 'ignore'))
             receiveDataOnSensors: dict = json.loads(msgDecode)
-            if receiveDataOnSensors['dataHora'] != 'No date':
-                receiveDataOnSensors['dataHora'] = strftime(
-                    '%d/%m/%Y %H:%M:%S', localtime(int(
-                        receiveDataOnSensors['dataHora']
-                    ))
-                )
-            else:
-                receiveDataOnSensors['dataHora'] = strftime(
-                    '%d/%m/%Y %H:%M:%S', localtime(time())
-                )
-            if receiveDataOnSensors['IDMac'] not in self.sens.getSensorMac():
-                self.sens.sensors = receiveDataOnSensors['IDMac']
-            if self.sens.sensors:
-                idSensor = self.sens.getIdSensor(receiveDataOnSensors['IDMac'])
-                if idSensor != -1:
-                    receiveDataOnSensors['id_sensor'] = idSensor
-                    self.sensData.execInsertTable(
-                        receiveDataOnSensors,
-                        table='data_sensor',
-                        collumn=(
-                            'id_sensor', 'date_hour', 'temperature',
-                            'humidity', 'pressure'
-                        )
+            self.handleDate.data = receiveDataOnSensors['dataHora']
+            self.handleSensor.data = receiveDataOnSensors['IDMac']
+
+            self.handleSensor.checkingSensors()
+            idSensor: int = self.handleSensor.getIDSensor()
+
+            if idSensor != -1:
+                receiveDataOnSensors[
+                    'dataHora'
+                ] = self.handleDate.translateDate()
+                receiveDataOnSensors['id_sensor'] = idSensor
+                self.sensorData.execInsertTable(
+                    receiveDataOnSensors,
+                    table='data_sensor',
+                    collumn=(
+                        'id_sensor', 'date_hour', 'temperature',
+                        'humidity', 'pressure'
                     )
+                )
 
         except Exception as e:
             className = self.__class__.__name__
