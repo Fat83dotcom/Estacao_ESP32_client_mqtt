@@ -1,2 +1,4 @@
 logFile.txt
 DataBaseManager/settings_db.py
+*.key
+*.pub
