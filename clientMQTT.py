@@ -121,11 +121,10 @@ class MQTTClient(LogErrorsMixin):
         self.mqttBroker = 'broker.hivemq.com'
         self.topic_sub = "ESP32_Sensors_BME280"
 
-        self.receiveDataOnSensors: dict = {}
-
         self.client = mqtt.Client()
-        self.sens = VerifySensors(dbPostgreSQL)
-        self.sensData = DataSensors(dbPostgreSQL)
+        self.sensorData = DataSensors(dbPostgreSQL)
+        self.handleDate = DateHandler()
+        self.handleSensor = SensorHandler(dbPostgreSQL)
 
     def __on_message(self, client, userdata, msg):
         '''CallBack'''
