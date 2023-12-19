@@ -1,8 +1,11 @@
 from daemonize import Daemonize
 from DataBaseManager.settings_db import banco
-from clientMQTT import Main
+from DataBaseManager.OperationalDataBase import DataBasePostgreSQL
+from clientMQTT import Main, SubscribeMQTTClient
 
-main = Main(banco)
+dbPostgreSQL = DataBasePostgreSQL(banco)
+subClient = SubscribeMQTTClient(dbPostgreSQL)
+main = Main(subClient)
 
 pid = '/tmp/ReadSubscribe.pid'
 daemon = Daemonize(app='ReadSubscribe', pid=pid, action=main.run)
