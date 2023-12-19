@@ -1,7 +1,6 @@
 from daemonize import Daemonize
 from clientMQTT import Main, PlublishMQTTClient
 
-
 pubClient = PlublishMQTTClient()
 main = Main(pubClient)
 
