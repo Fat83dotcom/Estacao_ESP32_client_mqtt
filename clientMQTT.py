@@ -154,11 +154,11 @@ class SubscribeMQTTClient(LogErrorsMixin):
             methName = 'on_message'
             self.registerErrors(className, methName, e)
 
-    def runMQTTClient(self):
+    def run(self):
         try:
             while 1:
                 self.client.connect(self.mqttBroker, self.port)
-                self.client.subscribe(self.topic_sub)
+                self.client.subscribe(self.topicSub)
                 self.client.on_message = self.__on_message
                 self.client.loop_forever()
         except Exception as e:
