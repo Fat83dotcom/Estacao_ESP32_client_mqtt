@@ -65,62 +65,60 @@ class VerifySensors:
 
 class DateHandler:
     def __init__(self) -> None:
-        self.__data: int = -1
+        self.__dateEpoch: int = -1
 
     @property
-    def data(self):
-        return self.__data
+    def dateEpoch(self):
+        return self.__dateEpoch
 
-    @data.setter
-    def data(self, value):
+    @dateEpoch.setter
+    def dateEpoch(self, value):
         if isinstance(value, int):
-            self.__data = value
+            self.__dateEpoch = value
 
     def translateDate(self) -> str:
-        if self.data != -1:
-            localData = strftime(
-                '%d/%m/%Y %H:%M:%S', localtime(int(
-                    self.data
-                ))
+        if self.dateEpoch != -1:
+            return strftime(
+                '%d/%m/%Y %H:%M:%S', localtime(
+                    self.dateEpoch
+                )
             )
-            return localData
         else:
-            localData = strftime(
+            return strftime(
                 '%d/%m/%Y %H:%M:%S', localtime(time())
             )
-            return localData
 
 
 class SensorHandler:
     def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
-        self.sens = VerifySensors(dbPostgreSQL)
-        self.__data: str
+        self.sensor = VerifySensors(dbPostgreSQL)
+        self.__idSensor: str
 
     @property
-    def data(self):
-        return self.__data
+    def idSensor(self):
+        return self.__idSensor
 
-    @data.setter
-    def data(self, value):
+    @idSensor.setter
+    def idSensor(self, value):
         if isinstance(value, str):
-            self.__data = value
+            self.__idSensor = value
 
     def checkingSensors(self):
-        if self.data not in self.sens.getSensorMac():
-            self.sens.sensors = self.data
+        if self.idSensor not in self.sensor.getSensorMac():
+            self.sensor.sensors = self.idSensor
 
     def getIDSensor(self) -> int:
-        if self.sens.sensors:
-            idSensor = self.sens.getIdSensor(self.data)
+        if self.sensor.sensors:
+            idSensor = self.sensor.getIdSensor(self.idSensor)
             return int(idSensor)
         return -1
 
 
-class MQTTClient(LogErrorsMixin):
+class SubscribeMQTTClient(LogErrorsMixin):
     def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
         self.port = 1883
         self.mqttBroker = 'broker.hivemq.com'
-        self.topic_sub = "ESP32_Sensors_BME280"
+        self.topicSub = "ESP32_Sensors_BME280"
 
         self.client = mqtt.Client()
         self.sensorData = DataSensors(dbPostgreSQL)
@@ -132,8 +130,8 @@ class MQTTClient(LogErrorsMixin):
         try:
             msgDecode = str(msg.payload.decode('utf-8', 'ignore'))
             receiveDataOnSensors: dict = json.loads(msgDecode)
-            self.handleDate.data = receiveDataOnSensors['dataHora']
-            self.handleSensor.data = receiveDataOnSensors['IDMac']
+            self.handleDate.dateEpoch = receiveDataOnSensors['dataHora']
+            self.handleSensor.idSensor = receiveDataOnSensors['IDMac']
 
             self.handleSensor.checkingSensors()
             idSensor: int = self.handleSensor.getIDSensor()
