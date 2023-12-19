@@ -26,7 +26,7 @@ class VerifySensors:
                 f'Verifique a entrada mac dos sensores! -> {value}'
             )
 
-    def __searchSensors(self):
+    def __searchSensors(self) -> list:
         result: list = self.sensorsInstace.execSelectOnTable(
             table='sensor',
             collCodiction='mac',
@@ -150,7 +150,6 @@ class MQTTClient(LogErrorsMixin):
                         'humidity', 'pressure'
                     )
                 )
-
         except Exception as e:
             className = self.__class__.__name__
             methName = 'on_message'
