@@ -189,9 +189,8 @@ class PlublishMQTTClient:
 
 
 class Main:
-    def __init__(self, db) -> None:
-        self.dbPostgreSQL = DataBasePostgreSQL(db)
-        self.mqttClient = MQTTClient(self.dbPostgreSQL)
+    def __init__(self, clientMQTT) -> None:
+        self.mqttClient = clientMQTT
 
     def run(self):
-        self.mqttClient.runMQTTClient()
+        self.mqttClient.run()
