@@ -1,4 +1,5 @@
 import json
+from time import sleep
 import paho.mqtt.client as mqtt
 from time import strftime, localtime, time
 from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
