@@ -29,7 +29,7 @@ class VerifySensors:
 
     def __searchSensors(self) -> list:
         result: list = self.sensorsInstace.execSelectOnTable(
-            table='sensor',
+            table='iot_sensor',
             collCodiction='mac',
             condiction='',
             conditionLiteral='',
@@ -42,7 +42,7 @@ class VerifySensors:
     def __insertSensors(self, *args) -> bool:
         if self.sensorsInstace.execInsertTable(
             *args,
-            table='sensor',
+            table='iot_sensor',
             collumn=('mac',),
         ):
             return True
