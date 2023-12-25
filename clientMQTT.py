@@ -140,12 +140,12 @@ class SubscribeMQTTClient(LogErrorsMixin):
                 receiveDataOnSensors[
                     'dataHora'
                 ] = self.handleDate.translateDate()
-                receiveDataOnSensors['id_sensor'] = idSensor
+                receiveDataOnSensors['codDS'] = idSensor
                 self.sensorData.execInsertTable(
                     receiveDataOnSensors,
                     table='data_sensor',
                     collumn=(
-                        'id_sensor', 'date_hour', 'temperature',
+                        'codDS', 'date_hour', 'temperature',
                         'humidity', 'pressure'
                     )
                 )
