@@ -42,3 +42,5 @@ CREATE TABLE daily_data_analysis (
 	pressure_median double precision,
 	FOREIGN KEY (ID_sensor) REFERENCES sensor (ID_sen)
 );
+
+ALTER DATABASE "estacao_IOT" SET datestyle TO ISO, DMY;
