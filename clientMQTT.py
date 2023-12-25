@@ -155,16 +155,16 @@ class SubscribeMQTTClient(LogErrorsMixin):
             self.registerErrors(className, methName, e)
 
     def run(self):
-        try:
-            while 1:
+        while 1:
+            try:
                 self.client.connect(self.mqttBroker, self.port)
                 self.client.subscribe(self.topicSub)
                 self.client.on_message = self.__on_message
                 self.client.loop_forever()
-        except Exception as e:
-            className = self.__class__.__name__
-            methName = 'run'
-            self.registerErrors(className, methName, e)
+            except Exception as e:
+                className = self.__class__.__name__
+                methName = 'run'
+                self.registerErrors(className, methName, e)
 
 
 class PlublishMQTTClient:
