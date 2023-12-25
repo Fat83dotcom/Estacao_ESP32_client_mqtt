@@ -393,7 +393,7 @@ class DataSensors(DataModel):
         self, *args, table: str, collumn: tuple, schema='public'
     ) -> None:
         data = (
-            args[0]['id_sensor'],
+            args[0]['codS'],
             args[0]['dataHora'],
             args[0]['Temperatura'],
             args[0]['Umidade'],
