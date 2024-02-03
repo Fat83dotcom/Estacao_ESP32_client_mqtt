@@ -34,10 +34,7 @@ class VerifySensors:
             condiction='',
             conditionLiteral='',
         )
-        if result is None:
-            return []
-        else:
-            return result
+        return [] if result is None else result
 
     def __insertSensors(self, *args) -> bool:
         if self.sensorsInstace.execInsertTable(
