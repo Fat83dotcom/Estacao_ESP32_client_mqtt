@@ -37,14 +37,11 @@ class VerifySensors:
         return [] if result is None else result
 
     def __insertSensors(self, *args) -> bool:
-        if self.sensorsInstace.execInsertTable(
+        return True if self.sensorsInstace.execInsertTable(
             *args,
             table='iot_sensor',
             collumn=('mac',),
-        ):
-            return True
-        else:
-            return False
+        ) else False
 
     def getSensorMac(self) -> list:
         if self.__sensorsOnDataBase:
