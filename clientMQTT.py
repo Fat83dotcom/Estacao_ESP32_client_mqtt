@@ -6,12 +6,51 @@ from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
 from DataBaseManager.OperationalDataBase import DataSensors, LogErrorsMixin
 
 
+class DateHandler:
+    def __init__(self) -> None:
+        self.__dateEpoch: int = -1
+
+    @property
+    def dateEpoch(self):
+        return self.__dateEpoch
+
+    @dateEpoch.setter
+    def dateEpoch(self, value):
+        if isinstance(value, int):
+            self.__dateEpoch = value
+
+    def translateDate(self) -> str:
+        if self.dateEpoch != -1:
+            return strftime(
+                '%d/%m/%Y %H:%M:%S', localtime(
+                    self.dateEpoch
+                )
+            )
+        else:
+            return strftime(
+                '%d/%m/%Y %H:%M:%S', localtime(time())
+            )
+
+
 class VerifySensors:
     def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
         self.sensorsInstace = Sensors(dbPostgreSQL)
-        self.__sensorsOnDataBase: list[tuple] = [
+        self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
+        self.__sensorMacs: list = self.__getSensorMacs(
+            self.__sensorsOnDataBase
+        )
+
+    def __getSensorMacs(self, iterable: list) -> list:
+        sensors = [
+            mac[1] for mac in self.__sensorsOnDataBase
+        ]
+        return sensors
+
+    def __getSensorsOnDB(self) -> list:
+        sensors = [
             sens for sens in self.__searchSensors()
         ]
+        return sensors
 
     @property
     def sensors(self):
