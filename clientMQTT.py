@@ -59,67 +59,42 @@ class VerifySensors:
     @sensors.setter
     def sensors(self, value):
         if isinstance(value, str):
-            if self.__insertSensors(value):
-                self.__sensorsOnDataBase.append(value)
-        else:
-            raise ValueError(
-                f'Verifique a entrada mac dos sensores! -> {value}'
-            )
+            if len(self.__sensorsOnDataBase) == 0 or \
+                    value not in self.__sensorMacs:
+                self.__insertSensors(value)
+                self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
+                self.__sensorMacs: list = self.__getSensorMacs()
+        raise ValueError(
+            f'Verifique a entrada mac dos sensores! -> {value}'
+        )
 
     def __searchSensors(self) -> list:
         result: list = self.sensorsInstace.execSelectOnTable(
-            table='iot_sensor',
+            table='Core_sensor',
             collCodiction='mac',
             condiction='',
             conditionLiteral='',
         )
         return [] if result is None else result
 
-    def __insertSensors(self, *args) -> bool:
-        return True if self.sensorsInstace.execInsertTable(
+    def __insertSensors(self, *args) -> None:
+        self.sensorsInstace.execInsertTable(
             *args,
-            table='iot_sensor',
+            table='Core_sensor',
             collumn=('mac',),
-        ) else False
+        )
 
     def getSensorMac(self) -> list:
-        if self.__sensorsOnDataBase:
-            sensorMacs: list = [macs[2] for macs in self.__sensorsOnDataBase]
-            return sensorMacs
+        if self.__sensorMacs:
+            return self.__sensorMacs
         else:
             return []
 
     def getIdSensor(self, sensor) -> int:
-        for i in self.__sensorsOnDataBase:
-            if sensor == i[2]:
-                return int(i[0])
+        for idSen in self.__sensorsOnDataBase:
+            if sensor == idSen[1]:
+                return int(idSen[0])
         return -1
-
-
-class DateHandler:
-    def __init__(self) -> None:
-        self.__dateEpoch: int = -1
-
-    @property
-    def dateEpoch(self):
-        return self.__dateEpoch
-
-    @dateEpoch.setter
-    def dateEpoch(self, value):
-        if isinstance(value, int):
-            self.__dateEpoch = value
-
-    def translateDate(self) -> str:
-        if self.dateEpoch != -1:
-            return strftime(
-                '%d/%m/%Y %H:%M:%S', localtime(
-                    self.dateEpoch
-                )
-            )
-        else:
-            return strftime(
-                '%d/%m/%Y %H:%M:%S', localtime(time())
-            )
 
 
 class SensorHandler:
@@ -176,9 +151,9 @@ class SubscribeMQTTClient(LogErrorsMixin):
                 receiveDataOnSensors['codS'] = idSensor
                 self.sensorData.execInsertTable(
                     receiveDataOnSensors,
-                    table='iot_datasensor',
+                    table='Core_datasensor',
                     collumn=(
-                        'codS', 'date_hour', 'temperature',
+                        'id_sensor_id', 'date_hour', 'temperature',
                         'humidity', 'pressure'
                     )
                 )
