@@ -196,9 +196,14 @@ class PlublishMQTTClient:
                 self.registerErrors(className, methName, e)
 
 
-class Main:
+class Main(LogErrorsMixin):
     def __init__(self, clientMQTT) -> None:
         self.mqttClient = clientMQTT
 
     def run(self):
-        self.mqttClient.run()
+        try:
+            self.mqttClient.run()
+        except Exception as e:
+            className = self.__class__.__name__
+            methName = 'run'
+            self.registerErrors(className, methName, e)
