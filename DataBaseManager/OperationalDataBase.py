@@ -371,7 +371,7 @@ class Sensors(DataModel):
 
     def execInsertTable(
         self, *args, table: str, collumn: tuple, schema='public'
-    ) -> bool:
+    ) -> None:
         try:
             data = (
                 args[0],
