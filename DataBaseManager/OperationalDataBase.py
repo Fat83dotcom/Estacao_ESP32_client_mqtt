@@ -367,9 +367,7 @@ class Sensors(DataModel):
             )
             return result
         except Exception as e:
-            className = self.__class__.__name__
-            methName = 'execSelectOnTable'
-            self.registerErrors(className, methName, e)
+            raise e
 
     def execInsertTable(
         self, *args, table: str, collumn: tuple, schema='public'
