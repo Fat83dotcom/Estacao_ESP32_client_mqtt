@@ -379,12 +379,8 @@ class Sensors(DataModel):
             self.DBInstance.insertTable(
                 data, table=table, collumn=collumn
             )
-            return True
         except Exception as e:
-            className = self.__class__.__name__
-            methName = 'execInsertTable'
-            self.registerErrors(className, methName, e)
-            return False
+            raise e
 
 
 class DataSensors(DataModel):
@@ -394,18 +390,21 @@ class DataSensors(DataModel):
     def execInsertTable(
         self, *args, table: str, collumn: tuple, schema='public'
     ) -> None:
-        data = (
-            args[0]['codS'],
-            args[0]['dataHora'],
-            args[0]['Temperatura'],
-            args[0]['Umidade'],
-            args[0]['Pressao']
-        )
-        self.DBInstance.insertTable(
-            data,
-            table=table,
-            collumn=collumn
-        )
+        try:
+            data = (
+                args[0]['codS'],
+                args[0]['dataHora'],
+                args[0]['Temperatura'],
+                args[0]['Umidade'],
+                args[0]['Pressao']
+            )
+            self.DBInstance.insertTable(
+                data,
+                table=table,
+                collumn=collumn
+            )
+        except Exception as e:
+            raise e
 
 
 if __name__ == '__main__':
