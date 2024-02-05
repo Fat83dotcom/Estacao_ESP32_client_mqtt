@@ -73,15 +73,9 @@ class DateHandler:
             self.__dateEpoch = value
 
     def translateDate(self) -> str:
-        if self.dateEpoch != -1:
-            return strftime(
-                '%d/%m/%Y %H:%M:%S', localtime(
-                    self.dateEpoch
-                )
-            )
-        else:
-            return strftime(
-                '%d/%m/%Y %H:%M:%S', localtime(time())
+        return strftime(
+            '%d/%m/%Y %H:%M:%S', localtime(
+                self.dateEpoch
             )
 
 
