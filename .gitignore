@@ -4,3 +4,4 @@ DataBaseManager/settings_db.py
 *.pub
 *odt
 example.py
+.vscode/
