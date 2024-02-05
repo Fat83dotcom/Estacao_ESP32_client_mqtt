@@ -1,9 +1,60 @@
 import json
+from abc import ABC, abstractmethod
 from time import sleep
 import paho.mqtt.client as mqtt
 from time import strftime, localtime, time
 from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
 from DataBaseManager.OperationalDataBase import DataSensors, LogErrorsMixin
+from DataBaseManager.settings_db import banco
+
+
+class DBInterface(ABC):
+    @abstractmethod
+    def select(self) -> list: pass
+
+    @abstractmethod
+    def insert(self, *args) -> None: pass
+
+
+class ConcreteSensor(DBInterface):
+    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
+        super().__init__()
+        self.sensorsInstace = Sensors(dbPostgreSQL)
+
+    def select(self) -> list:
+        result: list = self.sensorsInstace.execSelectOnTable(
+            table='Core_sensor',
+            collCodiction='mac',
+            condiction='',
+            conditionLiteral='',
+        )
+        return [] if result is None else result
+
+    def insert(self, *args) -> None:
+        self.sensorsInstace.execInsertTable(
+            *args,
+            table='Core_sensor',
+            collumn=('mac',),
+        )
+
+
+class ConcreteSensorData(DBInterface):
+    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
+        super().__init__()
+        self.dataSensorInstance = DataSensors(dbPostgreSQL)
+
+    def select(self) -> list:
+        raise NotImplementedError('Não utilizado até agora...')
+
+    def insert(self, *args) -> None:
+        self.dataSensorInstance.execInsertTable(
+            *args,
+            table='Core_datasensor',
+            collumn=(
+                'id_sensor_id', 'date_hour', 'temperature',
+                'humidity', 'pressure'
+            )
+        )
 
 
 class DateHandler:
