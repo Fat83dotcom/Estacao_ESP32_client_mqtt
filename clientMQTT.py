@@ -232,3 +232,13 @@ class Main(LogErrorsMixin):
             className = self.__class__.__name__
             methName = 'run'
             self.registerErrors(className, methName, e)
+
+
+if __name__ == '__main__':
+    try:
+        dbPostgreSQL = DataBasePostgreSQL(banco)
+        subClient = SubscribeMQTTClient(dbPostgreSQL)
+        main = Main(subClient)
+        main.run()
+    except Exception as e:
+        print(e)
