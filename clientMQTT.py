@@ -5,6 +5,8 @@ import paho.mqtt.client as mqtt
 from time import strftime, localtime, time
 from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
 from DataBaseManager.OperationalDataBase import DataSensors, LogErrorsMixin
+from DataBaseManager.OperationalDataBase import DataBase
+
 from DataBaseManager.settings_db import banco
 
 
@@ -17,7 +19,7 @@ class DBInterface(ABC):
 
 
 class ConcreteSensor(DBInterface):
-    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
+    def __init__(self, dbPostgreSQL: DataBase) -> None:
         super().__init__()
         self.sensorsInstace = Sensors(dbPostgreSQL)
 
@@ -39,7 +41,7 @@ class ConcreteSensor(DBInterface):
 
 
 class ConcreteSensorData(DBInterface):
-    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
+    def __init__(self, dbPostgreSQL: DataBase) -> None:
         super().__init__()
         self.dataSensorInstance = DataSensors(dbPostgreSQL)
 
@@ -174,7 +176,7 @@ class SensorHandler:
 
 
 class SubscribeMQTTClient(LogErrorsMixin):
-    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
+    def __init__(self, dbPostgreSQL: DataBase) -> None:
         self.port = 1883
         self.mqttBroker = 'broker.hivemq.com'
         self.topicSub = "ESP32_Sensors_BME280"
