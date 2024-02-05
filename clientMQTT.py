@@ -129,8 +129,8 @@ class VerifySensors:
 
 
 class SensorHandler:
-    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
-        self.sensor = VerifySensors(dbPostgreSQL)
+    def __init__(self, sqlManipulation: DBInterface) -> None:
+        self.sensor = VerifySensors(sqlManipulation)
         self.__idSensor: str
 
     @property
@@ -160,9 +160,10 @@ class SubscribeMQTTClient(LogErrorsMixin):
         self.topicSub = "ESP32_Sensors_BME280"
 
         self.client = mqtt.Client()
-        self.sensorData = DataSensors(dbPostgreSQL)
+        self.concreteSensor = ConcreteSensor(dbPostgreSQL)
+        self.concreteSensorData = ConcreteSensorData(dbPostgreSQL)
+        self.handleSensor = SensorHandler(self.concreteSensor)
         self.handleDate = DateHandler()
-        self.handleSensor = SensorHandler(dbPostgreSQL)
 
     def __on_message(self, client, userdata, msg):
         '''CallBack'''
@@ -180,14 +181,7 @@ class SubscribeMQTTClient(LogErrorsMixin):
                     'dataHora'
                 ] = self.handleDate.translateDate()
                 receiveDataOnSensors['codS'] = idSensor
-                self.sensorData.execInsertTable(
-                    receiveDataOnSensors,
-                    table='Core_datasensor',
-                    collumn=(
-                        'id_sensor_id', 'date_hour', 'temperature',
-                        'humidity', 'pressure'
-                    )
-                )
+                self.concreteSensorData.insert(receiveDataOnSensors)
         except Exception as e:
             className = self.__class__.__name__
             methName = 'on_message'
