@@ -296,7 +296,7 @@ class DataModel(ABC, LogErrorsMixin):
         Implementa uma interface para receber os dados e realiza as
         transações para cada tabela do banco.
     '''
-    def __init__(self, dB: DataBasePostgreSQL) -> None:
+    def __init__(self, dB: DataBase) -> None:
         self.DBInstance = dB
 
     def execInsertTable(
@@ -351,7 +351,7 @@ class DataModel(ABC, LogErrorsMixin):
 
 
 class Sensors(DataModel):
-    def __init__(self, dB: DataBasePostgreSQL) -> None:
+    def __init__(self, dB: DataBase) -> None:
         super().__init__(dB)
 
     def execSelectOnTable(
@@ -384,7 +384,7 @@ class Sensors(DataModel):
 
 
 class DataSensors(DataModel):
-    def __init__(self, dB: DataBasePostgreSQL) -> None:
+    def __init__(self, dB: DataBase) -> None:
         super().__init__(dB)
 
     def execInsertTable(
