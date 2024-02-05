@@ -83,24 +83,21 @@ class DateHandler:
 
 
 class VerifySensors:
-    def __init__(self, dbPostgreSQL: DataBasePostgreSQL) -> None:
-        self.sensorsInstace = Sensors(dbPostgreSQL)
-        self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
-        self.__sensorMacs: list = self.__getSensorMacs(
-            self.__sensorsOnDataBase
-        )
+    def __init__(self, sqlManipulation: DBInterface) -> None:
+        self.select = sqlManipulation.select()
+        self.insert = sqlManipulation.insert
+        self.__sensorsOnDataBase: list[tuple] = self._getSensorsOnDB()
+        self.__sensorMacs: list = self._getSensorMacs()
 
-    def __getSensorMacs(self, iterable: list) -> list:
-        sensors = [
-            mac[1] for mac in self.__sensorsOnDataBase
-        ]
-        return sensors
-
-    def __getSensorsOnDB(self) -> list:
-        sensors = [
+    def _getSensorsOnDB(self) -> list:
+        return [
             sens for sens in self.__searchSensors()
         ]
-        return sensors
+
+    def _getSensorMacs(self) -> list:
+        return [
+            mac[1] for mac in self.__sensorsOnDataBase
+        ]
 
     @property
     def sensors(self):
@@ -112,33 +109,17 @@ class VerifySensors:
             if len(self.__sensorsOnDataBase) == 0 or \
                     value not in self.__sensorMacs:
                 self.__insertSensors(value)
-                self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
-                self.__sensorMacs: list = self.__getSensorMacs()
-        raise ValueError(
-            f'Verifique a entrada mac dos sensores! -> {value}'
-        )
+                self.__sensorsOnDataBase: list[tuple] = self.select
+                self.__sensorMacs: list = self._getSensorMacs()
 
     def __searchSensors(self) -> list:
-        result: list = self.sensorsInstace.execSelectOnTable(
-            table='Core_sensor',
-            collCodiction='mac',
-            condiction='',
-            conditionLiteral='',
-        )
-        return [] if result is None else result
+        return self.select
 
     def __insertSensors(self, *args) -> None:
-        self.sensorsInstace.execInsertTable(
-            *args,
-            table='Core_sensor',
-            collumn=('mac',),
-        )
+        self.insert(args)
 
     def getSensorMac(self) -> list:
-        if self.__sensorMacs:
-            return self.__sensorMacs
-        else:
-            return []
+        return self.__sensorMacs if self.__sensorMacs else []
 
     def getIdSensor(self, sensor) -> int:
         for idSen in self.__sensorsOnDataBase:
