@@ -77,6 +77,9 @@ class DateHandler:
             '%d/%m/%Y %H:%M:%S', localtime(
                 self.dateEpoch
             )
+        ) if self.dateEpoch != -1 else strftime(
+            '%d/%m/%Y %H:%M:%S', localtime(time())
+        )
 
 
 class VerifySensors:
