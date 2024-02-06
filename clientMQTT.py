@@ -209,9 +209,9 @@ class PlublishMQTTClient:
         self.client = mqtt.Client()
 
     def run(self) -> None:
-        self.client.connect(self.mqttBroker, self.port)
         while 1:
             try:
+                self.client.connect(self.mqttBroker, self.port)
                 self.client.publish(self.topicPub, self.msg)
                 sleep(60)
             except Exception as e:
