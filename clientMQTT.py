@@ -1,13 +1,12 @@
 import json
-from abc import ABC, abstractmethod
 from time import sleep
 import paho.mqtt.client as mqtt
+from abc import ABC, abstractmethod
 from time import strftime, localtime, time
+from DataBaseManager.settings_db import banco
+from DataBaseManager.OperationalDataBase import DataBase
 from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
 from DataBaseManager.OperationalDataBase import DataSensors, LogErrorsMixin
-from DataBaseManager.OperationalDataBase import DataBase
-
-from DataBaseManager.settings_db import banco
 
 
 class DBInterface(ABC):
