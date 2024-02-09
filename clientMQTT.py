@@ -164,23 +164,29 @@ class SubscribeMQTTClient(LogErrorsMixin):
         self.handleSensor = SensorHandler(self.concreteSensor)
         self.handleDate = DateHandler()
 
-    def __on_message(self, client, userdata, msg):
-        '''CallBack'''
+    def __dataPersistent(self, data: dict) -> None:
         try:
-            msgDecode = str(msg.payload.decode('utf-8', 'ignore'))
-            receiveDataOnSensors: dict = json.loads(msgDecode)
-            self.handleDate.dateEpoch = receiveDataOnSensors['dataHora']
-            self.handleSensor.idSensor = receiveDataOnSensors['IDMac']
+            self.handleDate.dateEpoch = data['dataHora']
+            self.handleSensor.idSensor = data['IDMac']
 
             self.handleSensor.checkingSensors()
             idSensor: int = self.handleSensor.getIDSensor()
 
             if idSensor != -1:
-                receiveDataOnSensors[
+                data[
                     'dataHora'
                 ] = self.handleDate.translateDate()
-                receiveDataOnSensors['codS'] = idSensor
-                self.concreteSensorData.insert(receiveDataOnSensors)
+                data['codS'] = idSensor
+                self.concreteSensorData.insert(data)
+        except Exception as e:
+            raise e
+
+    def __on_message(self, client, userdata, msg):
+        '''CallBack para Receber a Mensagem.'''
+        try:
+            msgDecode = str(msg.payload.decode('utf-8', 'ignore'))
+            receiveDataOnSensors: dict = json.loads(msgDecode)
+            self.__dataPersistent(receiveDataOnSensors)
         except Exception as e:
             className = self.__class__.__name__
             methName = 'on_message'
