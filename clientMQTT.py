@@ -251,8 +251,11 @@ class Main(LogErrorsMixin):
 if __name__ == '__main__':
     try:
         dbPostgreSQL = DataBasePostgreSQL(banco)
-        subClient = SubscribeMQTTClient(dbPostgreSQL)
-        main = Main(subClient)
-        main.run()
+        # clientSub = SubscribeMQTTClient(dbPostgreSQL)
+        clientPub = PlublishMQTTClient()
+        # mainSub = Main(clientSub)
+        mainPub = Main(clientPub)
+        # mainSub.run()
+        mainPub.run()
     except Exception as e:
         print(e)
