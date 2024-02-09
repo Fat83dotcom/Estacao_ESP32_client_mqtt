@@ -209,7 +209,7 @@ class SubscribeMQTTClient(LogErrorsMixin):
                 self.registerErrors(className, methName, e)
 
 
-class PlublishMQTTClient:
+class PlublishMQTTClient(LogErrorsMixin):
     def __init__(self) -> None:
         self.port = 1883
         self.mqttBroker = 'broker.hivemq.com'
