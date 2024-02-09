@@ -218,11 +218,16 @@ class PlublishMQTTClient:
 
         self.client = mqtt.Client()
 
+    def __on_connect(self, client, userdata, flags, rc):
+        '''CallBack para conectar ao Broker.'''
+        self.client.publish(self.topicPub, self.msg)
+
     def run(self) -> None:
         while 1:
             try:
+                self.client.on_connect = self.__on_connect
+                self.client.loop_start()
                 self.client.connect(self.mqttBroker, self.port)
-                self.client.publish(self.topicPub, self.msg)
                 sleep(60)
             except Exception as e:
                 className = self.__class__.__name__
