@@ -192,12 +192,16 @@ class SubscribeMQTTClient(LogErrorsMixin):
             methName = 'on_message'
             self.registerErrors(className, methName, e)
 
+    def __on_connect(self, client, userdata, flags, rc):
+        ''' CallBack para conectar ao Broker.'''
+        self.client.subscribe(self.topicSub)
+
     def run(self):
         while 1:
             try:
-                self.client.connect(self.mqttBroker, self.port)
-                self.client.subscribe(self.topicSub)
+                self.client.on_connect = self.__on_connect
                 self.client.on_message = self.__on_message
+                self.client.connect(self.mqttBroker, self.port)
                 self.client.loop_forever()
             except Exception as e:
                 className = self.__class__.__name__
