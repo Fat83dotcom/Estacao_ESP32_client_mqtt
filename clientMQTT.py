@@ -228,9 +228,7 @@ class PlublishMQTTClient(LogErrorsMixin):
                 self.client.on_connect = self.__on_connect
                 self.client.loop_start()
                 self.client.connect(self.mqttBroker, self.port)
-                initTime = time()
-                while time() - initTime < 60:
-                    pass
+                sleep(60)
             except Exception as e:
                 className = self.__class__.__name__
                 methName = 'run'
