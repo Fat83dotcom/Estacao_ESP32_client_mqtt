@@ -155,7 +155,7 @@ class SensorHandler:
 class SubscribeMQTTClient(LogErrorsMixin):
     def __init__(self, dbPostgreSQL: DataBase) -> None:
         self.port = 1883
-        self.mqttBroker = '8c8e24e209114932b84362cf57a10fe5.s1.eu.hivemq.cloud'
+        self.mqttBroker = 'broker.emqx.io'
         self.topicSub = "ESP32_Sensors_BME280"
 
         self.client = mqtt.Client()
@@ -212,7 +212,7 @@ class SubscribeMQTTClient(LogErrorsMixin):
 class PlublishMQTTClient(LogErrorsMixin):
     def __init__(self) -> None:
         self.port = 1883
-        self.mqttBroker = '8c8e24e209114932b84362cf57a10fe5.s1.eu.hivemq.cloud'
+        self.mqttBroker = 'broker.emqx.io'
         self.topicPub = 'Require_Data'
         self.msg = 'return'
 
