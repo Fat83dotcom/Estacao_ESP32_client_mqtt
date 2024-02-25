@@ -83,17 +83,14 @@ class DateHandler:
 
 class VerifySensors:
     def __init__(self, sqlManipulation: DBInterface) -> None:
-        self.select = sqlManipulation.select()
-        self.insert = sqlManipulation.insert
-        self.__sensorsOnDataBase: list[tuple] = self._getSensorsOnDB()
-        self.__sensorMacs: list = self._getSensorMacs()
+        self.__select = sqlManipulation.select
+        self.__insert = sqlManipulation.insert
+        self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
 
-    def _getSensorsOnDB(self) -> list:
-        return [
-            sens for sens in self.__searchSensors()
-        ]
+    def __getSensorsOnDB(self) -> list:
+        return self.__select()
 
-    def _getSensorMacs(self) -> list:
+    def __getSensorMacs(self) -> list:
         return [
             mac[1] for mac in self.__sensorsOnDataBase
         ]
@@ -105,20 +102,16 @@ class VerifySensors:
     @sensors.setter
     def sensors(self, value):
         if isinstance(value, str):
-            if len(self.__sensorsOnDataBase) == 0 or \
-                    value not in self.__sensorMacs:
-                self.__insertSensors(value)
-                self.__sensorsOnDataBase: list[tuple] = self.select
-                self.__sensorMacs: list = self._getSensorMacs()
-
-    def __searchSensors(self) -> list:
-        return self.select
+            self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
+            if value not in self.getSensorMac():
+                self.__insert(value)
 
     def __insertSensors(self, *args) -> None:
-        self.insert(args)
+        self.__insert(*args)
 
     def getSensorMac(self) -> list:
-        return self.__sensorMacs if self.__sensorMacs else []
+        return self.__getSensorMacs() \
+            if self.__getSensorMacs() else []
 
     def getIdSensor(self, sensor) -> int:
         for idSen in self.__sensorsOnDataBase:
