@@ -5,3 +5,6 @@ DataBaseManager/settings_db.py
 *odt
 example.py
 .vscode/
+dataTransfer
+dateSequence.txt
+Estacao_ESP32/
