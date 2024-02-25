@@ -23,14 +23,14 @@ class Test_VerifySensors(unittest.TestCase):
             (1, 'e9:ae:05:9c:3d:75'), (2, '7c:33:50:0f:1f:dc'),
             (3, 'ab:8e:e6:d0:5e:cd')
         ]
-        self.assertEqual(self.vrSens._getSensorsOnDB(), result)
+        self.assertEqual(self.vrSens.__getSensorsOnDB(), result)
 
     def test_Get_Sensors_Mac_Return_List_Macs(self):
         result = [
             'e9:ae:05:9c:3d:75', '7c:33:50:0f:1f:dc',
             'ab:8e:e6:d0:5e:cd'
         ]
-        self.assertEqual(self.vrSens._getSensorMacs(), result)
+        self.assertEqual(self.vrSens.__getSensorMacs(), result)
 
     def test_GetIdSensor_Return_Ids_From_Sensors(self):
         result: int = 2
