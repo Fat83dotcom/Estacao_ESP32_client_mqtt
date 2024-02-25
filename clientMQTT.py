@@ -126,21 +126,21 @@ class SensorHandler:
         self.__idSensor: str
 
     @property
-    def idSensor(self):
+    def macSensor(self):
         return self.__idSensor
 
-    @idSensor.setter
-    def idSensor(self, value):
+    @macSensor.setter
+    def macSensor(self, value):
         if isinstance(value, str):
             self.__idSensor = value
 
     def checkingSensors(self):
-        if self.idSensor not in self.sensor.getSensorMac():
-            self.sensor.sensors = self.idSensor
+        if self.macSensor not in self.sensor.getSensorMac():
+            self.sensor.sensors = self.macSensor
 
     def getIDSensor(self) -> int:
         if self.sensor.sensors:
-            idSensor = self.sensor.getIdSensor(self.idSensor)
+            idSensor = self.sensor.getIdSensor(self.macSensor)
             return int(idSensor)
         return -1
 
@@ -160,7 +160,7 @@ class SubscribeMQTTClient(LogErrorsMixin):
     def __dataPersistent(self, data: dict) -> None:
         try:
             self.handleDate.dateEpoch = data['dataHora']
-            self.handleSensor.idSensor = data['IDMac']
+            self.handleSensor.macSensor = data['IDMac']
 
             self.handleSensor.checkingSensors()
             idSensor: int = self.handleSensor.getIDSensor()
