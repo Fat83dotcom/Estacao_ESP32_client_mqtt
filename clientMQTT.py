@@ -85,12 +85,12 @@ class VerifySensors:
     def __init__(self, sqlManipulation: DBInterface) -> None:
         self.__select = sqlManipulation.select
         self.__insert = sqlManipulation.insert
-        self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
+        self.__sensorsOnDataBase: list[tuple] = self._getSensorsOnDB()
 
-    def __getSensorsOnDB(self) -> list:
+    def _getSensorsOnDB(self) -> list:
         return self.__select()
 
-    def __getSensorMacs(self) -> list:
+    def _getSensorMacs(self) -> list:
         return [
             mac[1] for mac in self.__sensorsOnDataBase
         ]
@@ -102,16 +102,13 @@ class VerifySensors:
     @sensors.setter
     def sensors(self, value):
         if isinstance(value, str):
-            self.__sensorsOnDataBase: list[tuple] = self.__getSensorsOnDB()
+            self.__sensorsOnDataBase: list[tuple] = self._getSensorsOnDB()
             if value not in self.getSensorMac():
                 self.__insert(value)
 
-    def __insertSensors(self, *args) -> None:
-        self.__insert(*args)
-
     def getSensorMac(self) -> list:
-        return self.__getSensorMacs() \
-            if self.__getSensorMacs() else []
+        return self._getSensorMacs() \
+            if self._getSensorMacs() else []
 
     def getIdSensor(self, sensor) -> int:
         for idSen in self.__sensorsOnDataBase:
