@@ -98,7 +98,6 @@ class VerifySensors:
     def getIdSensor(self, mac) -> int:
         for sensor in self.__sensorsOnDataBase:
             if mac == sensor[1]:
-                print(mac)
                 return int(sensor[0])
         return -1
 
@@ -154,7 +153,9 @@ class SubscribeMQTTClient(LogErrorsMixin):
                 data['codS'] = idSensor
                 self.concreteSensorData.insert(data)
         except Exception as e:
-            raise e
+            className = self.__class__.__name__
+            methName = '__dataPersistent'
+            self.registerErrors(className, methName, e)
 
     def __on_message(self, client, userdata, msg):
         '''CallBack para Receber a Mensagem.'''
