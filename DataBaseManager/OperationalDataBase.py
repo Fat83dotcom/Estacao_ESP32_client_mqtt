@@ -238,7 +238,6 @@ class Sensors(DataModel):
     def execSelectOnTable(self, *args: str) -> list:
         try:
             query = 'SELECT "id_sen", "mac" FROM "Core_sensor";'
-            print(query)
             result: list = self.DBInstance.selectOnTable(query)
             return result
         except Exception as e:
@@ -248,7 +247,6 @@ class Sensors(DataModel):
         try:
             mac: str = args[0]
             query = f'INSERT INTO "Core_sensor" (mac) VALUES(\'{mac}\');'
-            print(query)
             self.DBInstance.insertTable(query)
         except Exception as e:
             raise e
@@ -272,7 +270,6 @@ class DataSensors(DataModel):
             (date_hour, temperature, humidity, pressure, id_sensor_id)
             VALUES('{data[1]}', {data[2]}, {data[3]}, {data[4]}, {data[0]});
             '''
-            print(query)
             self.DBInstance.insertTable(query)
         except Exception as e:
             raise e
