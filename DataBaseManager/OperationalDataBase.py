@@ -1,6 +1,6 @@
 import psycopg
 from abc import ABC, abstractmethod
-from psycopg import sql, Error
+from psycopg import Error
 from DataBaseManager.LogFiles import LogErrorsMixin
 
 
@@ -86,9 +86,6 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
                     sQL = query
                     cursor.execute(sQL)
         except (Error, Exception) as e:
-            className = self.__class__.__name__
-            methName = self.toExecute.__name__
-            self.registerErrors(className, methName, e)
             raise e
 
     def toExecuteSelect(self, query) -> list:
@@ -107,9 +104,6 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
                     dataRecovery: list = [x for x in cursor.fetchall()]
                     return dataRecovery
         except (Error, Exception) as e:
-            className = self.__class__.__name__
-            methName = self.toExecute.__name__
-            self.registerErrors(className, methName, e)
             raise e
 
     def placeHolderSQLGenerator(self, values) -> str | None:
@@ -123,9 +117,6 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
                     placeHolders += '%s, '
             return placeHolders
         except (Error, Exception) as e:
-            className = self.__class__.__name__
-            methName = self.placeHolderSQLGenerator.__name__
-            self.registerErrors(className, methName, e)
             raise e
 
     def SQLInsertGenerator(
@@ -172,8 +163,11 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
         except (Error, Exception) as e:
             raise e
 
-    def deleteOnTable(self) -> None:
-        pass
+    def deleteOnTable(self, query: str) -> None:
+        try:
+            self.toExecute(query)
+        except (Error, Exception) as e:
+            raise e
 
     def selectOnTable(self, query: str) -> list:
         try:
@@ -182,7 +176,7 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
             raise e
 
 
-class DataModel(ABC, LogErrorsMixin):
+class DataModel(ABC):
     '''
         Implementa uma interface para receber os dados e realiza as
         transações para cada tabela do banco.
