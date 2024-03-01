@@ -23,20 +23,11 @@ class ConcreteSensor(DBInterface):
         self.sensorsInstace = Sensors(dbPostgreSQL)
 
     def select(self) -> list:
-        result: list = self.sensorsInstace.execSelectOnTable(
-            table='Core_sensor',
-            collCodiction='mac',
-            condiction='',
-            conditionLiteral='',
-        )
+        result: list = self.sensorsInstace.execSelectOnTable()
         return [] if result is None else result
 
     def insert(self, *args) -> None:
-        self.sensorsInstace.execInsertTable(
-            *args,
-            table='Core_sensor',
-            collumn=('mac',),
-        )
+        self.sensorsInstace.execInsertTable(*args)
 
 
 class ConcreteSensorData(DBInterface):
@@ -48,14 +39,7 @@ class ConcreteSensorData(DBInterface):
         raise NotImplementedError('Não utilizado até agora...')
 
     def insert(self, *args) -> None:
-        self.dataSensorInstance.execInsertTable(
-            *args,
-            table='Core_datasensor',
-            collumn=(
-                'id_sensor_id', 'date_hour', 'temperature',
-                'humidity', 'pressure'
-            )
-        )
+        self.dataSensorInstance.execInsertTable(*args)
 
 
 class DateHandler:
