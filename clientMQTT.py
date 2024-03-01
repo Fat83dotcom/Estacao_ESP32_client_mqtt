@@ -122,7 +122,7 @@ class SensorHandler:
             self.sensor.sensors = self.macSensor
 
     def getIDSensor(self) -> int:
-        if self.sensor.sensors:
+        if self.sensor.getIdSensor(self.macSensor):
             idSensor = self.sensor.getIdSensor(self.macSensor)
             return int(idSensor)
         return -1
@@ -147,7 +147,6 @@ class SubscribeMQTTClient(LogErrorsMixin):
 
             self.handleSensor.checkingSensors()
             idSensor: int = self.handleSensor.getIDSensor()
-
             if idSensor != -1:
                 data[
                     'dataHora'
