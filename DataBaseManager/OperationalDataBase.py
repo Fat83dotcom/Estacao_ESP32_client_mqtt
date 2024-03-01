@@ -83,8 +83,8 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
                 password=self.password
             ) as con:
                 with con.cursor() as cursor:
-                    sQL, data = query
-                    cursor.execute(sQL, data)
+                    sQL = query
+                    cursor.execute(sQL)
         except (Error, Exception) as e:
             className = self.__class__.__name__
             methName = self.toExecute.__name__
@@ -102,8 +102,8 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
                 port=self.port, password=self.password
             ) as con:
                 with con.cursor() as cursor:
-                    sQL, data = query
-                    cursor.execute(sQL, data)
+                    sQL = query
+                    cursor.execute(sQL)
                     dataRecovery: list = [x for x in cursor.fetchall()]
                     return dataRecovery
         except (Error, Exception) as e:
@@ -131,40 +131,13 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
     def SQLInsertGenerator(
         self, *args, collumn: tuple, table: str, schema: str
     ) -> tuple:
-        try:
-            values = args[0]
-            query: tuple = sql.SQL(
-                "INSERT INTO {table} ({collumn}) VALUES ({pHolders})"
-            ).format(
-                table=sql.Identifier(schema, table),
-                collumn=sql.SQL(', ').join(map(sql.Identifier, collumn)),
-                pHolders=sql.SQL(', ').join(sql.Placeholder() * len(collumn))
-            ), values
-            return query
-        except (Error, Exception) as e:
-            className = self.__class__.__name__
-            methName = self.SQLInsertGenerator.__name__
-            self.registerErrors(className, methName, e)
-            raise e
+        return ('Não Implementado !!',)
 
     def SQLUpdateGenerator(
             self, *args, collumnUpdate: str, collumnCondicional: str,
             table: str, schema: str, update: str, conditionalValue: str
             ):
-        try:
-            query = sql.SQL(
-                "UPDATE {table} SET {colUp}=%s WHERE {colCon}=%s"
-            ).format(
-                table=sql.Identifier(schema, table),
-                colUp=sql.Identifier(collumnUpdate),
-                colCon=sql.Identifier(collumnCondicional)
-            ), (update, conditionalValue)
-            return query
-        except (Error, Exception) as e:
-            className = self.__class__.__name__
-            methName = self.SQLUpdateGenerator.__name__
-            self.registerErrors(className, methName, e)
-            raise e
+        return ('Não Implementado !!',)
 
     def SQLDeleteGenerator(self) -> tuple:
         return ('Não Implementado !!',)
@@ -173,72 +146,9 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
         self, table: str, collCodiction: str, condiction: str,
         schema: str, collumns: tuple, conditionLiteral: str
     ) -> tuple:
-        try:
-            if conditionLiteral == '' and condiction == '':
-                if '*' in collumns:
-                    query = sql.SQL(
-                        """SELECT * FROM {tab}"""
-                    ).format(
-                        tab=sql.Identifier(schema, table),
-                    ), ()
-                    return query
-                else:
-                    query = sql.SQL(
-                        """SELECT {col} FROM {tab}"""
-                    ).format(
-                        col=sql.SQL(', ').join(map(sql.Identifier, collumns)),
-                        tab=sql.Identifier(schema, table),
-                    ), ()
-                    return query
-            elif conditionLiteral == '':
-                if '*' in collumns:
-                    query = sql.SQL(
-                        """SELECT * FROM {tab}
-                            WHERE {colCond}={cond}"""
-                    ).format(
-                        tab=sql.Identifier(schema, table),
-                        colCond=sql.Identifier(collCodiction),
-                        cond=sql.Literal(condiction)
-                    ), ()
-                    return query
-                else:
-                    query = sql.SQL(
-                        """SELECT {col} FROM {tab}
-                            WHERE {colCond}={cond}"""
-                    ).format(
-                        col=sql.SQL(', ').join(map(sql.Identifier, collumns)),
-                        tab=sql.Identifier(schema, table),
-                        colCond=sql.Identifier(collCodiction),
-                        cond=sql.Identifier(condiction)
-                    ), ()
-                    return query
-            else:
-                if '*' in collumns:
-                    query = sql.SQL(
-                        "SELECT * FROM {tab}" + f" {conditionLiteral}"  # type: ignore
-                    ).format(
-                        tab=sql.Identifier(schema, table)
-                    ), ()
-                    return query
-                else:
-                    query = sql.SQL(
-                        "SELECT {col} FROM {tab}" + f" {conditionLiteral}"  # type: ignore
-                    ).format(
-                        col=sql.SQL(', ').join(map(sql.Identifier, collumns)),
-                        tab=sql.Identifier(schema, table),
-                    ), ()
-                    return query
-        except (Error, Exception) as e:
-            className = self.__class__.__name__
-            methName = self.SQLUpdateGenerator.__name__
-            self.registerErrors(className, methName, e)
-            raise e
+        return ('Não Implementado !!',)
 
-    def updateTable(
-        self, table: str, collumnUpdate: str,
-        collumnCondicional: str, update: str,
-        conditionalValue: str, schema='public',
-    ) -> None:
+    def updateTable(self, query: str) -> None:
         '''
             Atualiza colunas.
             Parametros: collumn -> Nome da coluna
@@ -246,19 +156,11 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
             update -> Valor da modificação
         '''
         try:
-            query = self.SQLUpdateGenerator(
-                table=table, collumnUpdate=collumnUpdate,
-                collumnCondicional=collumnCondicional,
-                schema=schema, update=update,
-                conditionalValue=conditionalValue
-            )
             self.toExecute(query)
         except (Error, Exception) as e:
             raise e
 
-    def insertTable(
-        self, *args, table: str, collumn: tuple, schema='public'
-    ) -> None:
+    def insertTable(self, query: str) -> None:
         '''
             Insere dados na tabela.
             Parametros:
@@ -266,9 +168,6 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
             collumn -> Nome das colunas, na ordem de inserção.
         '''
         try:
-            query: tuple = self.SQLInsertGenerator(
-                *args, table=table, collumn=collumn, schema=schema
-            )
             self.toExecute(query)
         except (Error, Exception) as e:
             raise e
@@ -276,16 +175,8 @@ class DataBasePostgreSQL(DataBase, LogErrorsMixin):
     def deleteOnTable(self) -> None:
         pass
 
-    def selectOnTable(
-        self, table: str, collCodiction: str, condiction: str,
-        conditionLiteral: str, schema='public', collumns=('*',)
-    ) -> list:
+    def selectOnTable(self, query: str) -> list:
         try:
-            query = self.SQLSelectGenerator(
-                table=table, collCodiction=collCodiction,
-                condiction=condiction, schema=schema,
-                collumns=collumns, conditionLiteral=conditionLiteral
-            )
             return self.toExecuteSelect(query)
         except (Error, Exception) as e:
             raise e
@@ -299,9 +190,7 @@ class DataModel(ABC, LogErrorsMixin):
     def __init__(self, dB: DataBase) -> None:
         self.DBInstance = dB
 
-    def execInsertTable(
-        self, *args, table: str, collumn: tuple, schema='public'
-    ) -> None:
+    def execInsertTable(self, *args: str) -> None:
         '''
             Implementa uma estrutura pra inserir dados em tabelas.
             Retorna -> None
@@ -309,9 +198,7 @@ class DataModel(ABC, LogErrorsMixin):
         raise NotImplementedError('Implemente o metodo em uma subclasse'
                                   ' relativa a tabela trabalhada.')
 
-    def execCreateTable(
-        self, *args, tableName: str, schema='public'
-    ) -> None:
+    def execCreateTable(self, *args: str) -> None:
         '''
             Implementa uma estrutura para criar tabelas.
             Retorna -> None
@@ -319,10 +206,7 @@ class DataModel(ABC, LogErrorsMixin):
         raise NotImplementedError('Implemente o metodo em uma subclasse'
                                   ' relativa a tabela trabalhada.')
 
-    def execUpdateTable(
-        self, table: str, collumnUpdate: tuple, collumnCondicional: str,
-        update: str, conditionalValue: str, schema='public',
-    ) -> None:
+    def execUpdateTable(self, *args: str) -> None:
         '''
             Implementa uma estrutura para atualizar tabelas.
             Retorna -> None
@@ -330,7 +214,7 @@ class DataModel(ABC, LogErrorsMixin):
         raise NotImplementedError('Implemente o metodo em uma subclasse'
                                   ' relativa a tabela trabalhada.')
 
-    def execDeleteOnTable(self, table: str, key: str) -> None:
+    def execDeleteOnTable(self, *args: str) -> None:
         '''
             Implementa uma estrutura para deletar linhas em tabelas.
             Retorna -> None
@@ -338,10 +222,7 @@ class DataModel(ABC, LogErrorsMixin):
         raise NotImplementedError('Implemente o metodo em uma subclasse'
                                   ' relativa a tabela trabalhada.')
 
-    def execSelectOnTable(
-        self, table: str, collCodiction: str, condiction: str,
-        conditionLiteral: str, schema='public', collumns=('*', )
-    ) -> list:
+    def execSelectOnTable(self, *args: str) -> list:
         '''
             Implementa uma estrutura para criar buscar dados em tabelas.
             Retorna -> None
@@ -354,31 +235,21 @@ class Sensors(DataModel):
     def __init__(self, dB: DataBase) -> None:
         super().__init__(dB)
 
-    def execSelectOnTable(
-        self, table: str, collCodiction: str,
-        condiction: str, conditionLiteral: str,
-        schema='public', collumns=('*', )
-    ) -> list:
+    def execSelectOnTable(self, *args: str) -> list:
         try:
-            result: list = self.DBInstance.selectOnTable(
-                table=table, collCodiction=collCodiction,
-                condiction=condiction, conditionLiteral=conditionLiteral,
-                collumns=collumns
-            )
+            query = 'SELECT "id_sen", "mac" FROM "Core_sensor";'
+            print(query)
+            result: list = self.DBInstance.selectOnTable(query)
             return result
         except Exception as e:
             raise e
 
-    def execInsertTable(
-        self, *args, table: str, collumn: tuple, schema='public'
-    ) -> None:
+    def execInsertTable(self, *args: str) -> None:
         try:
-            data = (
-                args[0],
-            )
-            self.DBInstance.insertTable(
-                data, table=table, collumn=collumn
-            )
+            mac: str = args[0]
+            query = f'INSERT INTO "Core_sensor" (mac) VALUES(\'{mac}\');'
+            print(query)
+            self.DBInstance.insertTable(query)
         except Exception as e:
             raise e
 
@@ -387,9 +258,7 @@ class DataSensors(DataModel):
     def __init__(self, dB: DataBase) -> None:
         super().__init__(dB)
 
-    def execInsertTable(
-        self, *args, table: str, collumn: tuple, schema='public'
-    ) -> None:
+    def execInsertTable(self, *args) -> None:
         try:
             data = (
                 args[0]['codS'],
@@ -398,11 +267,13 @@ class DataSensors(DataModel):
                 args[0]['Umidade'],
                 args[0]['Pressao']
             )
-            self.DBInstance.insertTable(
-                data,
-                table=table,
-                collumn=collumn
-            )
+            query = f'''
+            INSERT INTO "Core_datasensor"
+            (date_hour, temperature, humidity, pressure, id_sensor_id)
+            VALUES('{data[1]}', {data[2]}, {data[3]}, {data[4]}, {data[0]});
+            '''
+            print(query)
+            self.DBInstance.insertTable(query)
         except Exception as e:
             raise e
 
