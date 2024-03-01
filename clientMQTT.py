@@ -105,16 +105,16 @@ class VerifySensors:
 class SensorHandler:
     def __init__(self, sqlManipulation: DBInterface) -> None:
         self.sensor = VerifySensors(sqlManipulation)
-        self.__idSensor: str
+        self.__macSensor: str
 
     @property
     def macSensor(self):
-        return self.__idSensor
+        return self.__macSensor
 
     @macSensor.setter
     def macSensor(self, value):
         if isinstance(value, str):
-            self.__idSensor = value
+            self.__macSensor = value
 
     def checkingSensors(self):
         if self.macSensor not in self.sensor.getSensorMac():
