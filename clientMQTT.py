@@ -91,13 +91,15 @@ class VerifySensors:
                 self.__insert(value)
 
     def getSensorMac(self) -> list:
-        return self._getSensorMacs() \
-            if self._getSensorMacs() else []
+        if self._getSensorMacs():
+            return self._getSensorMacs()
+        return []
 
-    def getIdSensor(self, sensor) -> int:
-        for idSen in self.__sensorsOnDataBase:
-            if sensor == idSen[1]:
-                return int(idSen[0])
+    def getIdSensor(self, mac) -> int:
+        for sensor in self.__sensorsOnDataBase:
+            if mac == sensor[1]:
+                print(mac)
+                return int(sensor[0])
         return -1
 
 
