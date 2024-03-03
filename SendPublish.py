@@ -1,7 +1,10 @@
 from daemonize import Daemonize
 from clientMQTT import Main, PlublishMQTTClient
+from DataBaseManager.settings_db import credentialBorker
 
-pubClient = PlublishMQTTClient()
+pubClient = PlublishMQTTClient(
+    credentialBorker['user'], credentialBorker['password']
+)
 main = Main(pubClient)
 
 
