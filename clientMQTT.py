@@ -128,12 +128,18 @@ class SensorHandler:
 
 
 class SubscribeMQTTClient(LogErrorsMixin):
-    def __init__(self, dbPostgreSQL: DataBase) -> None:
+    def __init__(
+        self, dbPostgreSQL: DataBase, brokerUser: str, brokerPassW: str
+    ) -> None:
         self.port = 1883
-        self.mqttBroker = 'broker.emqx.io'
+        self.mqttBroker = 'brokermqtt.brainstormtecnologia.tech'
         self.topicSub = "ESP32_Sensors_BME280"
 
         self.client = mqtt.Client()
+        self.client.username_pw_set(
+            username=brokerUser,
+            password=brokerPassW
+        )
         self.concreteSensor = ConcreteSensor(dbPostgreSQL)
         self.concreteSensorData = ConcreteSensorData(dbPostgreSQL)
         self.handleSensor = SensorHandler(self.concreteSensor)
@@ -186,13 +192,17 @@ class SubscribeMQTTClient(LogErrorsMixin):
 
 
 class PlublishMQTTClient(LogErrorsMixin):
-    def __init__(self) -> None:
+    def __init__(self, brokerUser: str, brokerPassW: str) -> None:
         self.port = 1883
-        self.mqttBroker = 'broker.emqx.io'
+        self.mqttBroker = 'brokermqtt.brainstormtecnologia.tech'
         self.topicPub = 'Require_Data'
         self.msg = 'return'
 
         self.client = mqtt.Client()
+        self.client.username_pw_set(
+            username=brokerUser,
+            password=brokerPassW
+        )
 
     def __on_connect(self, client, userdata, flags, rc):
         '''CallBack para conectar ao Broker.'''
