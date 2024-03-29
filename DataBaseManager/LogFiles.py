@@ -8,7 +8,7 @@ class LogFiles:
         '''
             Grava o log no arquivo.
         '''
-        path: str = os.path.join(os.getcwd(), 'logFile.txt')
+        path: str = os.path.join(os.path.abspath('.'), 'logFile.txt')
         with open(path, "a", encoding='utf-8') as file:
             file.write(f'{args[0]}\n')
 
