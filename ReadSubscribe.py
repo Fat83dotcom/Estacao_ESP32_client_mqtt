@@ -7,8 +7,8 @@ dbPostgreSQL = DataBasePostgreSQL(banco)
 subClient = SubscribeMQTTClient(
     dbPostgreSQL, credentialBorker['user'], credentialBorker['password']
 )
-main = Main(subClient)
 
+main = Main(subClient)
 
 pid = '/tmp/ReadSubscribe.pid'
 daemon = Daemonize(app='ReadSubscribe', pid=pid, action=main.run)
