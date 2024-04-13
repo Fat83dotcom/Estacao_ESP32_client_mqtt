@@ -127,10 +127,11 @@ class SensorHandler:
         return -1
 
 
-class SubscribeMQTTClient(LogErrorsMixin):
+class SubscribeMQTTClient():
     def __init__(
         self, dbPostgreSQL: DataBase, brokerUser: str, brokerPassW: str
     ) -> None:
+        self.error = LogErrorsMixin()
         self.port = 1883
         self.mqttBroker = 'brokermqtt.brainstormtecnologia.tech'
         self.topicSub = "ESP32_Sensors_BME280"
@@ -172,7 +173,7 @@ class SubscribeMQTTClient(LogErrorsMixin):
         except Exception as e:
             className = self.__class__.__name__
             methName = 'on_message'
-            self.registerErrors(className, methName, e)
+            self.error.registerErrors(className, methName, e)
 
     def __on_connect(self, client, userdata, flags, rc):
         ''' CallBack para conectar ao Broker.'''
@@ -191,8 +192,9 @@ class SubscribeMQTTClient(LogErrorsMixin):
                 self.registerErrors(className, methName, e)
 
 
-class PlublishMQTTClient(LogErrorsMixin):
+class PlublishMQTTClient():
     def __init__(self, brokerUser: str, brokerPassW: str) -> None:
+        self.error = LogErrorsMixin()
         self.port = 1883
         self.mqttBroker = 'brokermqtt.brainstormtecnologia.tech'
         self.topicPub = 'Require_Data'
@@ -218,11 +220,12 @@ class PlublishMQTTClient(LogErrorsMixin):
             except Exception as e:
                 className = self.__class__.__name__
                 methName = 'run'
-                self.registerErrors(className, methName, e)
+                self.error.registerErrors(className, methName, e)
 
 
-class Main(LogErrorsMixin):
+class Main():
     def __init__(self, clientMQTT) -> None:
+        self.error = LogErrorsMixin()
         self.mqttClient = clientMQTT
 
     def run(self):
@@ -231,7 +234,7 @@ class Main(LogErrorsMixin):
         except Exception as e:
             className = self.__class__.__name__
             methName = 'run'
-            self.registerErrors(className, methName, e)
+            self.error.registerErrors(className, methName, e)
 
 
 if __name__ == '__main__':
