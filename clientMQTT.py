@@ -3,7 +3,7 @@ from time import sleep
 import paho.mqtt.client as mqtt
 from abc import ABC, abstractmethod
 from time import strftime, localtime, time
-from DataBaseManager.settings_db import banco
+from DataBaseManager.settings_db import banco, credentialBorker
 from DataBaseManager.OperationalDataBase import DataBase
 from DataBaseManager.OperationalDataBase import Sensors, DataBasePostgreSQL
 from DataBaseManager.OperationalDataBase import DataSensors, LogErrorsMixin
@@ -133,7 +133,7 @@ class SubscribeMQTTClient():
     ) -> None:
         self.error = LogErrorsMixin()
         self.port = 1883
-        self.mqttBroker = 'brokermqtt.brainstormtecnologia.tech'
+        self.mqttBroker = credentialBorker['broker_host']
         self.topicSub = "ESP32_Sensors_BME280"
 
         self.client = mqtt.Client()
@@ -196,7 +196,7 @@ class PlublishMQTTClient():
     def __init__(self, brokerUser: str, brokerPassW: str) -> None:
         self.error = LogErrorsMixin()
         self.port = 1883
-        self.mqttBroker = 'brokermqtt.brainstormtecnologia.tech'
+        self.mqttBroker = credentialBorker['broker_host']
         self.topicPub = 'Require_Data'
         self.msg = 'return'
 
