@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/fernando/Área de Trabalho/Estacao_ESP32_client_mqtt/venv/bin/python3.12" "$0" "$@"
+'''exec' "/home/fernando/Área de Trabalho/Projeto_Estacao/Estacao_ESP32_client_mqtt/venv/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
